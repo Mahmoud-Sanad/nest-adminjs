@@ -16,7 +16,9 @@ model User {
   email     String     @unique
   hash      String
   username  String?
-  Bookmarks Bookmark[]
+  Bookmarks Bookmark[] @relation(name: "bookmark")
+  Chat      Chat[]
+  Message   Message[]
 
   @@map("users")
 }
@@ -28,7 +30,33 @@ model Bookmark {
   desc      String?
   link      String
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], name: "bookmark")
 
   @@map("bookmarks")
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants User[]
+  messages     Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sender   User @relation(fields: [senderId], references: [id])
+  senderId Int
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  chatId Int
+
+  @@map("messages")
 }

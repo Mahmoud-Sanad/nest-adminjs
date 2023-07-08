@@ -11,6 +11,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { JwtGuard } from './auth/guards/jwt.guard';
+import { join } from 'path';
+import { GatwayModule } from './gatway/gatway.module';
+import { MessageModule } from './message/message.module';
+import { ChatModule } from './chat/chat.module';
 
 AdminJS.registerAdapter({ Resource, Database });
 
@@ -22,13 +26,20 @@ AdminJS.registerAdapter({ Resource, Database });
     BookmarkModule,
     JwtGuard,
     AdminModule.createAdminAsync({
-      imports: [PrismaModule],
+      imports: [PrismaModule, GatwayModule],
       inject: [PrismaService],
       useFactory: async (prisma: PrismaService) => {
         const dmmf = (prisma as any)._dmmf as DMMFClass;
         return {
           adminJsOptions: {
             rootPath: '/admin',
+            branding: {
+              companyName: 'OPPA',
+              logo: join(__dirname, 'public/Oppa-logo.svg.png'),
+            },
+            assets: {
+              styles: ['/admin.option.css'],
+            },
             resources: [
               {
                 resource: { model: dmmf.modelMap.User, client: prisma },
@@ -43,6 +54,8 @@ AdminJS.registerAdapter({ Resource, Database });
         };
       },
     }),
+    MessageModule,
+    ChatModule,
   ],
   controllers: [AppController],
 })

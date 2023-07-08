@@ -1,0 +1,11 @@
+/* admin.custom.css */
+
+/* Customize the sidebar background color */
+.app-sidebar {
+  background-color: #1a202c;
+}
+
+/* Customize the sidebar text color */
+.app-sidebar a {
+  color: #ffffff;
+}
